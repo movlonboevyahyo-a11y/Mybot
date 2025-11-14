@@ -2,7 +2,7 @@ import telebot
 from flask import Flask, request
 
 # Telegram BOT TOKEN – BU YERGA O'ZINGNI TOKENINGNI YOZ!
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+TOKEN = "7371202845:AAGZKymwF1eBsfYVisQ1M0DnElOz_LRZfr0"
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
