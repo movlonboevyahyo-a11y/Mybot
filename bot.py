@@ -19,7 +19,7 @@ def getMessage():
 @app.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://mybot-vj1z.onrender.com/' + TOKEN)
+    bot.set_webhook(url="https://mybot-vj1z.onrender.com/" + TOKEN)
     return "Webhook ishladi!", 200
 
 @bot.message_handler(commands=['start'])
