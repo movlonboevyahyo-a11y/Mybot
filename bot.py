@@ -3,14 +3,17 @@ import telebot
 import requests
 from flask import Flask, request
 
-# Tokenlarni Render Environment Variables'dan olish
+# Tokenlarni Render Environment Variables orqali olish
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_KEY = os.getenv("OPENAI_KEY")
+
+# Sening Render URL'ing
+WEBHOOK_URL = "https://mybot-vj1z.onrender.com/" + TELEGRAM_TOKEN
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 app = Flask(__name__)
 
-# ---------- Webhook qismi ----------
+# ----------- Webhook qismi -----------
 @app.route('/' + TELEGRAM_TOKEN, methods=['POST'])
 def get_message():
     json_str = request.stream.read().decode("utf-8")
@@ -18,19 +21,24 @@ def get_message():
     bot.process_new_updates([update])
     return "OK", 200
 
+
 @app.route('/')
 def set_webhook():
     bot.remove_webhook()
-    webhook_url = "https://YOUR_APP_NAME.onrender.com/" + TELEGRAM_TOKEN
-    bot.set_webhook(url=webhook_url)
+    bot.set_webhook(url=WEBHOOK_URL)
     return "Webhook ishga tushdi!", 200
 
-# ---------- /start ----------
+
+# ----------- /start buyruq -----------
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Assalomu alaykum! Bot ishga tushdi 😊")
+    bot.send_message(
+        message.chat.id,
+        "Assalomu alaykum! Men ishga tushdim 😊\nXohlagan narsani yozing."
+    )
 
-# ---------- AI Chat javobi ----------
+
+# ----------- AI bilan javob berish -----------
 @bot.message_handler(func=lambda m: True)
 def ai_answer(message):
     text = message.text
@@ -51,8 +59,14 @@ def ai_answer(message):
         json=data
     )
 
-    answer = response.json()["choices"][0]["message"]["content"]
+    try:
+        answer = response.json()["choices"][0]["message"]["content"]
+    except:
+        answer = "Xatolik yuz berdi 🥲"
+
     bot.send_message(message.chat.id, answer)
 
+
+# ----------- App ishga tushirish -----------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
