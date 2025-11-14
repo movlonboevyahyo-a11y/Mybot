@@ -48,4 +48,13 @@ def all_messages(message):
 # Flask serverni ishga tushirish
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+# ------------------ BARCHA XABARLAR UCHUN HANDLER ------------------
 
+@bot.message_handler(func=lambda message: True)
+def all_messages(message):
+    text = message.text.lower()
+
+    if "salom" in text:
+        bot.send_message(message.chat.id, "Va alaykum salom 😊")
+    else:
+        bot.send_message(message.chat.id, "Xabaringiz qabul qilindi ✔️")
