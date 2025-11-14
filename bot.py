@@ -10,7 +10,9 @@ app = Flask(__name__)
 @app.route('/' + TOKEN, methods=['POST'])
 def getMessage():
     bot.process_new_updates(
-        [telebot.types.Update.de_json(request.stream.read().decode("utf-8"))]
+        [telebot.types.Update.de_json(
+            request.stream.read().decode("utf-8")
+        )]
     )
     return "!", 200
 
@@ -22,7 +24,8 @@ def webhook():
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Assalomu alaykum! Bot ishga tushdi 😊")
+    bot.send_message(message.chat.id,
+        "Assalomu alaykum! Bot ishga tushdi 😊")
 
 @bot.message_handler(func=lambda m: True)
 def echo(message):
