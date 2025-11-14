@@ -26,8 +26,3 @@ def set_webhook():
 def start(message):
     bot.send_message(message.chat.id, "Assalomu alaykum! Bot ishga tushdi 😊")
 
-# Echo handler
-@bot.message_handler(func=lambda m: True)
-def echo(message):
-    bot.send_message(message.chat.id, message.text)
-import os
