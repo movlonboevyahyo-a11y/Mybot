@@ -1,18 +1,20 @@
 import telebot
 from flask import Flask, request
 
-TOKEN = "7371202845:AAGZKymwF1eBsfYVisQ1M0DnElOz_LRZfr0"
-bot = telebot.TeleBot(TOKEN)
+# Telegram BOT TOKEN – BU YERGA O'ZINGNI TOKENINGNI YOZ!
+TOKEN = "YOUR_BOT_TOKEN_HERE"
 
+bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# Telegram webhook qismi
-@app.route('/' + TOKEN, methods=['POST'])
+# --------------------- WEBHOOK QISMI ---------------------
+@app.route("/" + TOKEN, methods=["POST"])
 def getMessage():
     json_str = request.stream.read().decode("utf-8")
     update = telebot.types.Update.de_json(json_str)
     bot.process_new_updates([update])
     return "OK", 200
+
 
 @app.route("/")
 def set_webhook():
@@ -21,8 +23,29 @@ def set_webhook():
     bot.set_webhook(url=webhook_url)
     return "Webhook ishga tushdi!", 200
 
-# /start komandasi
+
+# --------------------- /start KOMANDASI ---------------------
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Assalomu alaykum! Bot ishga tushdi 😊")
+    bot.send_message(
+        message.chat.id,
+        "Assalomu alaykum! Bot ishga tushdi 😊"
+    )
+
+
+# --------------------- HAMMA XABARLAR ---------------------
+@bot.message_handler(func=lambda message: True)
+def all_messages(message):
+    text = message.text.lower()
+
+    if "salom" in text:
+        bot.send_message(message.chat.id, "Va alaykum salom 😊")
+    else:
+        bot.send_message(message.chat.id, "Qabul qilindi ✔️")
+
+
+# ------------------------------------------------------------
+# Flask serverni ishga tushirish
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
 
