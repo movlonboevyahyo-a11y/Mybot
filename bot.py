@@ -6,27 +6,27 @@ bot = telebot.TeleBot(TOKEN)
 
 app = Flask(__name__)
 
-# Telegram webhook uchun
+# Telegram webhook qismi
 @app.route('/' + TOKEN, methods=['POST'])
 def getMessage():
-    bot.process_new_updates(
-        [telebot.types.Update.de_json(
-            request.stream.read().decode("utf-8")
-        )]
-    )
-    return "!", 200
+    json_str = request.stream.read().decode("utf-8")
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "OK", 200
 
 @app.route("/")
-def webhook():
+def set_webhook():
     bot.remove_webhook()
-    bot.set_webhook(url="https://mybot-vj1z.onrender.com/" + TOKEN)
-    return "Webhook ishladi!", 200
+    webhook_url = "https://mybot-vj1z.onrender.com/" + TOKEN
+    bot.set_webhook(url=webhook_url)
+    return "Webhook ishga tushdi!", 200
 
+# /start komandasi
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id,
-        "Assalomu alaykum! Bot ishga tushdi 😊")
+    bot.send_message(message.chat.id, "Assalomu alaykum! Bot ishga tushdi 😊")
 
+# Echo handler
 @bot.message_handler(func=lambda m: True)
 def echo(message):
     bot.send_message(message.chat.id, message.text)
