@@ -30,3 +30,8 @@ def start(message):
 @bot.message_handler(func=lambda m: True)
 def echo(message):
     bot.send_message(message.chat.id, message.text)
+import os
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
